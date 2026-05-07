@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ .Title }} - Amazon Book Catalog</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .amazon-orange { background-color: #FF9900; }
+        .amazon-orange:hover { background-color: #FF7700; }
+        .ku-blue { background-color: #232F3E; }
+        .ku-blue:hover { background-color: #1a1f2a; }
+        .sticky-buy {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+            z-index: 1000;
+        }
+        .sticky-buy.show {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Book Hero Section -->
+    <section class="py-16">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col md:flex-row gap-8 items-center">
+                <!-- Left: Book Cover -->
+                <div class="md:w-1/3">
+                    <img src="{{ .Params.image_url }}" alt="{{ .Title }}" class="w-full rounded-lg shadow-2xl hover:shadow-3xl transition-shadow">
+                </div>
+                
+                <!-- Right: Book Info -->
+                <div class="md:w-2/3">
+                    <h1 class="text-4xl font-bold mb-2">{{ .Title }}</h1>
+                    <h2 class="text-2xl text-gray-600 mb-4">{{ .Params.subtitle }}</h2>
+                    
+                    <!-- Social Proof -->
+                    <div class="flex items-center gap-2 mb-6">
+                        <span class="text-2xl">⭐⭐⭐⭐⭐</span>
+                        <span class="text-gray-600">({{ .Params.review_count }} Reviews)</span>
+                    </div>
+                    
+                    <!-- Action Buttons -->
+                    <div class="flex flex-col sm:flex-row gap-4 mb-6">
+                        <a href="{{ .Params.amazon_link }}" class="amazon-orange text-white px-8 py-4 rounded-lg font-bold text-lg hover:shadow-lg transition-all text-center" target="_blank">
+                            Buy on Amazon
+                        </a>
+                        {{ if eq .Params.ku_eligible "TRUE" }}
+                        <a href="{{ .Params.amazon_link }}" class="ku-blue text-white px-8 py-4 rounded-lg font-bold text-lg hover:shadow-lg transition-all text-center" target="_blank">
+                            Read for FREE with Kindle Unlimited
+                        </a>
+                        {{ end }}
+                    </div>
+                    
+                    <!-- Category Badge -->
+                    <div class="mb-4">
+                        <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
+                            {{ .Params.category }}
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Description Section -->
+    <section class="py-12 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold mb-8">What You'll Learn</h2>
+            <ul class="space-y-3 max-w-3xl">
+                {{ range .Params.description_bullets }}
+                <li class="flex items-start gap-3">
+                    <span class="text-green-500 text-xl">✓</span>
+                    <span class="text-lg">{{ . }}</span>
+                </li>
+                {{ end }}
+            </ul>
+        </div>
+    </section>
+
+    <!-- Readers Also Bought Section -->
+    <section class="py-16">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold mb-12 text-center">Readers also bought</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {{ range .Params.related_books }}
+                <div class="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow">
+                    <img src="{{ .Image_URL }}" alt="{{ .Title }}" class="w-full h-48 object-cover">
+                    <div class="p-4">
+                        <h3 class="font-semibold text-lg mb-2">{{ .Title }}</h3>
+                        <a href="{{ .Amazon_Link }}" class="amazon-orange text-white px-4 py-2 rounded font-medium text-sm inline-block hover:shadow transition-all" target="_blank">
+                            Buy on Amazon
+                        </a>
+                    </div>
+                </div>
+                {{ end }}
+            </div>
+        </div>
+    </section>
+
+    <!-- Top Bestsellers Section -->
+    <section class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl font-bold mb-12 text-center">Top Bestsellers</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6" id="bestsellers-grid">
+                <!-- Bestsellers will be loaded here via JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Sticky Buy Button -->
+    <div class="sticky-buy" id="stickyBuy">
+        <div class="container mx-auto px-4 text-center">
+            <a href="{{ .Params.amazon_link }}" class="amazon-orange text-white px-8 py-3 rounded-lg font-bold text-lg hover:shadow-lg transition-all inline-block" target="_blank">
+                Buy on Amazon
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Load bestsellers data
+        fetch('../data/bestsellers.json')
+            .then(response => response.json())
+            .then(bestsellers => {
+                const grid = document.getElementById('bestsellers-grid');
+                grid.innerHTML = '';
+                
+                bestsellers.forEach(book => {
+                    const bookCard = document.createElement('div');
+                    bookCard.className = 'bg-gray-50 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow';
+                    bookCard.innerHTML = `
+                        <img src="${book.Image_URL}" alt="${book.Title}" class="w-full h-48 object-cover">
+                        <div class="p-4">
+                            <h3 class="font-semibold text-lg mb-2">${book.Title}</h3>
+                            <a href="${book.Amazon_Link}" class="amazon-orange text-white px-4 py-2 rounded font-medium text-sm inline-block hover:shadow transition-all" target="_blank">
+                                Buy on Amazon
+                            </a>
+                        </div>
+                    `;
+                    grid.appendChild(bookCard);
+                });
+            })
+            .catch(error => console.error('Error loading bestsellers:', error));
+
+        // Sticky buy button functionality
+        let lastScrollY = window.scrollY;
+        let ticking = false;
+
+        function updateStickyButton() {
+            const scrollY = window.scrollY;
+            const heroSection = document.querySelector('section');
+            const stickyBuy = document.getElementById('stickyBuy');
+            
+            if (heroSection && stickyBuy) {
+                const heroBottom = heroSection.offsetTop + heroSection.offsetHeight;
+                
+                // Show sticky button when scrolled past hero section
+                if (scrollY > heroBottom + 100) {
+                    stickyBuy.classList.add('show');
+                } else {
+                    stickyBuy.classList.remove('show');
+                }
+            }
+            
+            lastScrollY = scrollY;
+            ticking = false;
+        }
+
+        function requestTick() {
+            if (!ticking) {
+                window.requestAnimationFrame(updateStickyButton);
+                ticking = true;
+            }
+        }
+
+        window.addEventListener('scroll', requestTick);
+    </script>
+</body>
+</html>

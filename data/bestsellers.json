@@ -1,0 +1,32 @@
+[
+  {
+    "Book_ID": "en-001",
+    "Title": "Book One",
+    "Image_URL": "https://via.placeholder.com/300x450",
+    "Amazon_Link": "https://amazon.com"
+  },
+  {
+    "Book_ID": "en-002",
+    "Title": "Book Two",
+    "Image_URL": "https://via.placeholder.com/300x450",
+    "Amazon_Link": "https://amazon.com"
+  },
+  {
+    "Book_ID": "en-003",
+    "Title": "Book Three",
+    "Image_URL": "https://via.placeholder.com/300x450",
+    "Amazon_Link": "https://amazon.com"
+  },
+  {
+    "Book_ID": "en-004",
+    "Title": "Book Four",
+    "Image_URL": "https://via.placeholder.com/300x450",
+    "Amazon_Link": "https://amazon.com"
+  },
+  {
+    "Book_ID": "en-005",
+    "Title": "Book Five",
+    "Image_URL": "https://via.placeholder.com/300x450",
+    "Amazon_Link": "https://amazon.com"
+  }
+]

@@ -1,0 +1,7 @@
+Book_ID,Title,Subtitle,Category,Image_URL,Amazon_Link,KU_Eligible,Review_Count,Description_Bullets,Build_Status
+en-001,Book One,The First,Health,https://via.placeholder.com/300x450,https://amazon.com,TRUE,150,Point 1;Point 2,on
+en-002,Book Two,The Second,Wealth,https://via.placeholder.com/300x450,https://amazon.com,FALSE,89,Point A;Point B,on
+en-003,Book Three,The Third,Health,https://via.placeholder.com/300x450,https://amazon.com,TRUE,420,Learn fast;Save money,on
+en-004,Book Four,The Fourth,Mindset,https://via.placeholder.com/300x450,https://amazon.com,FALSE,12,Grow;Succeed,on
+en-005,Book Five,The Fifth,Wealth,https://via.placeholder.com/300x450,https://amazon.com,TRUE,310,Rich;Happy,on
+en-006,Book Six,The Sixth,Health,https://via.placeholder.com/300x450,https://amazon.com,FALSE,5,Test;Test2,off
